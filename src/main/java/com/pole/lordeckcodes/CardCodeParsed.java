@@ -4,7 +4,7 @@ package com.pole.lordeckcodes;
 * Made by Pole (2019)
 */
 
-class CardCodeParsed {
+public class CardCodeParsed {
 
     int setNumber;
     String factionName;
@@ -20,7 +20,7 @@ class CardCodeParsed {
         return Integer.parseInt(cardCode.substring(0, 2));
     }
 
-    static String parseFaction(String cardCode) {
+    public static String parseFaction(String cardCode) {
         return cardCode.substring(2, 4);
     }
 

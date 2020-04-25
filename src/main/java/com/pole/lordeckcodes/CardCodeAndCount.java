@@ -9,7 +9,7 @@ public class CardCodeAndCount {
     public String cardCode;
     public int count;
 
-    CardCodeAndCount(String cardCode, int count) {
+    public CardCodeAndCount(String cardCode, int count) {
         this.cardCode = cardCode;
         this.count = count;
     }

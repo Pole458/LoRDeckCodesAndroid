@@ -1,14 +1,14 @@
 package com.pole.lordeckcodes;
 
 /*
-* Made by Pole (2019)
+* Made by Pole (2020)
 */
 
 import java.util.*;
 
 public class LoRDeckEncoder {
 
-    private final static int MAX_KNOWN_VERSION = 1;
+    private final static int MAX_KNOWN_VERSION = 2;
 
     private final static int CARD_CODE_LENGTH = 7;
 
@@ -98,6 +98,8 @@ public class LoRDeckEncoder {
                 return 4;
             case "SI":
                 return 5;
+            case "BW":
+                return 6;
         }
         throw new IllegalArgumentException("No factionName code for this value");
     }
@@ -116,6 +118,8 @@ public class LoRDeckEncoder {
                 return "PZ";
             case 5:
                 return "SI";
+            case 6:
+                return "BW";
         }
         throw new IllegalArgumentException("No factionName name for this factionName code");
     }
