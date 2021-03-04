@@ -8,7 +8,7 @@ import java.util.*;
 
 public class LoRDeckEncoder {
 
-    private final static int MAX_KNOWN_VERSION = 2;
+    private final static int MAX_KNOWN_VERSION = 3;
 
     private final static int CARD_CODE_LENGTH = 7;
 
@@ -31,7 +31,7 @@ public class LoRDeckEncoder {
         byteList.remove(0);
 
         if (version > MAX_KNOWN_VERSION) {
-            throw new IllegalArgumentException("The provided code requires a higher version of this library, please update.");
+            throw new IllegalArgumentException("The provided code requires a higher version of this library; please update.");
         }
 
         for (int i = 3; i > 0; i--) {
@@ -100,6 +100,10 @@ public class LoRDeckEncoder {
                 return 5;
             case "BW":
                 return 6;
+            case "SH":
+                return 7;
+            case "MT":
+                return 9;
         }
         throw new IllegalArgumentException("No factionName code for this value");
     }
@@ -120,12 +124,16 @@ public class LoRDeckEncoder {
                 return "SI";
             case 6:
                 return "BW";
+            case 7:
+                return "SH";
+            case 9:
+                return "MT";
         }
         throw new IllegalArgumentException("No factionName name for this factionName code");
     }
 
-    private static String padLeft(int s, int n) {
-        return String.format("%0" + n + "d", s);
+    public static String padLeft(int integer, int length) {
+        return String.format("%0" + length + "d", integer);
     }
 
     private static Byte[] getDeckCodeBytes(List<CardCodeAndCount> deck) {
@@ -133,7 +141,7 @@ public class LoRDeckEncoder {
         if (!validCardCodesAndCounts(deck))
             throw new IllegalArgumentException("The provided deck contains invalid card codes.");
 
-        Byte[] formatAndVersion = new Byte[] { 17 }; //i.e. 00010001
+        Byte[] formatAndVersion = new Byte[] { 19 }; //i.e. 00010011
         final List<Byte> result = new ArrayList<>(Arrays.asList(formatAndVersion));
 
         final LinkedList<CardCodeAndCount> of3 = new LinkedList<>();
@@ -164,7 +172,7 @@ public class LoRDeckEncoder {
         sortGroupOf(groupedOf2s);
         sortGroupOf(groupedOf1s);
 
-        //Nofs (since rare) are simply sorted by the card code - there's no optimiziation based upon the card count
+        //Nofs (since rare) are simply sorted by the card code - there's no optimization based upon the card count
         sortByCardCodes(ofN);
 
         //Encode
@@ -198,12 +206,16 @@ public class LoRDeckEncoder {
     private static void sortGroupOf(final List<List<CardCodeAndCount>> groupOf) {
 
         //noinspection ComparatorCombinators
-        Collections.sort(groupOf, (ccc1, ccc2) -> Integer.compare(ccc1.size(), ccc2.size()));
+        Collections.sort(groupOf, (ccc1, ccc2) -> {
+            int c = Integer.compare(ccc1.size(), ccc2.size());
+
+            if(c != 0) return c;
+
+            return  ccc1.get(0).cardCode.compareTo(ccc2.get(0).cardCode);
+        });
 
         for (List<CardCodeAndCount> cardCodeAndCounts : groupOf) {
-
             sortByCardCodes(cardCodeAndCounts);
-
         }
     }
 
